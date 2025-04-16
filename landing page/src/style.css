@@ -1334,8 +1334,8 @@ footer {
   .image-box-9,
   .image-box-10 {
     width: 30vw;
-    height: 70vh;
-    max-height: 600px;
+    height: 85vh;
+    max-height: 800px;
   }
 }
 
@@ -1441,8 +1441,21 @@ footer {
   .image-box-9,
   .image-box-10 {
     width: 45vw;
-    height: 60vh;
-    max-height: 500px;
+    height: 85vh;
+    max-height: 800px;
+  }
+
+  /* Center buttons on tablet */
+  .flex-container {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Center buttons with inline styles in about section */
+  .about-content > div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -1525,9 +1538,15 @@ footer {
   .image-box-9,
   .image-box-10 {
     width: 80vw;
-    height: 70vh;
-    max-height: 600px;
+    height: 90vh;
+    max-height: 900px;
     border-radius: 8px;
+  }
+
+  /* Ensure buttons are centered on smaller tablets */
+  .flex-container {
+    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -1600,5 +1619,25 @@ footer {
   .product-img {
     gap: 15px;
     padding: 20px 0;
+  }
+
+  /* Adjust button spacing on mobile */
+  .flex-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* Also center the about section buttons on mobile */
+  .about-content > div {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* Make buttons wider on mobile for better touch targets */
+  .flex-container .btn1,
+  .about-content > div .btn1 {
+    width: 80%;
   }
 }

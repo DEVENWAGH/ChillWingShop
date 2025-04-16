@@ -230,42 +230,48 @@ export function initPaymentGateway() {
   // Update checkout button
   const checkoutBtn = document.getElementById("checkout-btn");
   if (checkoutBtn) {
+    // Instead of creating a new event handler, use the one from cartManager
+    // First remove any existing listeners by replacing the button
     const newCheckoutBtn = checkoutBtn.cloneNode(true);
     checkoutBtn.parentNode.replaceChild(newCheckoutBtn, checkoutBtn);
 
     newCheckoutBtn.addEventListener("click", function () {
-      const cartOverlay = document.getElementById("cart-overlay");
-      if (cartOverlay) cartOverlay.style.display = "none";
+      // Use the global checkout handler if available, otherwise proceed with fallback
+      if (window.handleCheckout) {
+        return window.handleCheckout();
+      } else {
+        // Fallback code (simplified version of original handler)
+        const cartOverlay = document.getElementById("cart-overlay");
+        if (cartOverlay) cartOverlay.style.display = "none";
 
-      // Set delivery color
-      if (window.setDeliveryColor) window.setDeliveryColor();
+        // Set delivery color
+        if (window.setDeliveryColor) window.setDeliveryColor();
 
-      // Show delivery modal
-      const deliveryModal = document.getElementById("delivery-modal");
-      if (deliveryModal) deliveryModal.style.display = "flex";
+        // Show delivery modal
+        const deliveryModal = document.getElementById("delivery-modal");
+        if (deliveryModal) deliveryModal.style.display = "flex";
 
-      const deliveryForm = document.getElementById("delivery-form");
-      if (deliveryForm) deliveryForm.style.display = "block";
+        const deliveryForm = document.getElementById("delivery-form");
+        if (deliveryForm) deliveryForm.style.display = "block";
 
-      const deliverySuccess = document.getElementById("delivery-success");
-      if (deliverySuccess) deliverySuccess.style.display = "none";
+        const deliverySuccess = document.getElementById("delivery-success");
+        if (deliverySuccess) deliverySuccess.style.display = "none";
 
-      const deliveryError = document.getElementById("delivery-error");
-      if (deliveryError) deliveryError.style.display = "none";
+        const deliveryError = document.getElementById("delivery-error");
+        if (deliveryError) deliveryError.style.display = "none";
 
-      // Calculate and store the current cart total
-      if (window.getCartTotal) {
-        window.cartTotal = window.getCartTotal();
-        // Make it available to the global scope for Razorpay
-        window.orderDetails = {
-          totalAmount: window.cartTotal,
-        };
-        console.log("Cart total set for checkout:", window.cartTotal);
-      }
+        // Calculate and store the current cart total
+        if (window.getCartTotal) {
+          window.cartTotal = window.getCartTotal();
+          window.orderDetails = {
+            totalAmount: window.cartTotal,
+          };
+        }
 
-      // Trigger order summary update to refresh with latest cart items
-      if (window.setDeliveryColor) {
-        setTimeout(() => window.setDeliveryColor(), 100);
+        // Trigger order summary update
+        if (window.setDeliveryColor) {
+          setTimeout(() => window.setDeliveryColor(), 100);
+        }
       }
     });
   }

@@ -331,29 +331,26 @@ export function initCartManager() {
 
   // Checkout button redirects to delivery form
   if (checkoutBtn && deliveryModal) {
-    checkoutBtn.addEventListener("click", function (e) {
-      // Prevent default to avoid any browser delays
-      e.preventDefault();
+    // First remove any existing event listeners
+    const newCheckoutBtn = checkoutBtn.cloneNode(true);
+    checkoutBtn.parentNode.replaceChild(newCheckoutBtn, checkoutBtn);
 
-      // Always use the latest cart state from window.cartItems
-      const currentCartItems = window.cartItems || cartItems;
+    // Create a function to handle checkout logic that we can expose globally
+    const handleCheckout = function (e) {
+      // Prevent default if it's an event
+      if (e && e.preventDefault) e.preventDefault();
+
+      // Get the latest cart items (important for consistency)
+      const latestCartItems =
+        JSON.parse(localStorage.getItem("fanCartItems")) || [];
+
+      // Make sure window.cartItems is always up-to-date
+      window.cartItems = latestCartItems;
 
       // Prevent checkout if cart is empty
-      if (!currentCartItems || currentCartItems.length === 0) {
-        return;
-      }
-
-      // Show loading indicator for visual feedback
-      const loadingIndicator = document.getElementById("loading-indicator");
-      if (loadingIndicator) loadingIndicator.classList.add("show");
-
-      // Check if cart is empty - prevent checkout if empty
-      if (currentCartItems.length === 0) {
-        // Hide cart overlay immediately
-        cartOverlay.style.display = "none";
-
-        // Hide loading indicator
-        if (loadingIndicator) loadingIndicator.classList.remove("show");
+      if (!latestCartItems || latestCartItems.length === 0) {
+        // Hide cart overlay
+        if (cartOverlay) cartOverlay.style.display = "none";
 
         // Show notification
         showNotification(
@@ -375,13 +372,15 @@ export function initCartManager() {
           }, 2000);
         }
 
-        return;
+        return false;
       }
 
-      // If cart has items, proceed with checkout
+      // Show loading indicator for visual feedback
+      const loadingIndicator = document.getElementById("loading-indicator");
+      if (loadingIndicator) loadingIndicator.classList.add("show");
 
       // Immediately hide cart overlay for faster perceived response
-      cartOverlay.style.display = "none";
+      if (cartOverlay) cartOverlay.style.display = "none";
 
       // Immediately show delivery modal while setting up other things
       if (deliveryModal) deliveryModal.style.display = "flex";
@@ -392,13 +391,18 @@ export function initCartManager() {
       if (deliveryError) deliveryError.style.display = "none";
 
       // Pre-calculate the cart total for faster processing
-      if (window.getCartTotal) {
-        window.cartTotal = window.getCartTotal();
-        // Make it available to the global scope for Razorpay
-        window.orderDetails = {
-          totalAmount: window.cartTotal,
-        };
-      }
+      let cartTotal = 0;
+      latestCartItems.forEach((item) => {
+        cartTotal += Number(item.price) * Number(item.quantity);
+      });
+
+      // Make it available globally
+      window.cartTotal = cartTotal;
+      window.orderDetails = {
+        totalAmount: cartTotal,
+      };
+
+      console.log("Cart total set for checkout:", cartTotal);
 
       // Hide loading indicator after short delay
       setTimeout(() => {
@@ -415,7 +419,15 @@ export function initCartManager() {
           paymentSection.scrollIntoView({ behavior: "smooth" });
         }
       }, 10);
-    });
+
+      return true;
+    };
+
+    // Expose the checkout handler globally so other modules can use it
+    window.handleCheckout = handleCheckout;
+
+    // Add event listener to the new button
+    newCheckoutBtn.addEventListener("click", handleCheckout);
   }
 
   // Calculate and return current cart total
@@ -457,5 +469,7 @@ export function initCartManager() {
     clearCart,
     getCartTotal,
     showNotification,
+    // Also export the handleCheckout function
+    handleCheckout: window.handleCheckout,
   };
 }

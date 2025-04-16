@@ -629,17 +629,17 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script type="module" src="/src/main.js"></script>
     <script>
-      // Performance optimization for checkout flow
-      document
-        .getElementById("checkout-btn")
-        .addEventListener("click", function () {
-          document.getElementById("loading-indicator").classList.add("show");
-          setTimeout(function () {
-            document
-              .getElementById("loading-indicator")
-              .classList.remove("show");
-          }, 800);
-        });
+      // Performance optimization for checkout flow - now handled in cartManager.js
+      document.addEventListener("DOMContentLoaded", function () {
+        // Make sure checkout button has visual feedback even before JS loads
+        const checkoutBtn = document.getElementById("checkout-btn");
+        if (checkoutBtn) {
+          checkoutBtn.addEventListener("click", function () {
+            const indicator = document.getElementById("loading-indicator");
+            if (indicator) indicator.classList.add("show");
+          });
+        }
+      });
     </script>
   </body>
 </html>
