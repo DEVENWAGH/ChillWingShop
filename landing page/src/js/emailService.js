@@ -58,6 +58,12 @@ export async function sendOrderConfirmationToAdmin(
     Array.isArray(orderDetails.cartItems) &&
     orderDetails.cartItems.length > 0
   ) {
+    // Calculate total from orderDetails.cartItems for consistency
+    let calculatedTotal = orderDetails.cartItems.reduce(
+      (sum, item) => sum + Number(item.price) * Number(item.quantity),
+      0
+    );
+
     productSummary = orderDetails.cartItems
       .map(
         (item) =>
@@ -66,10 +72,60 @@ export async function sendOrderConfirmationToAdmin(
           }`
       )
       .join("\n");
-    // Add total
-    productSummary += `\n\nTotal: ₹${
-      orderDetails.totalAmount?.toFixed(2) || "3999.00"
-    }`;
+
+    // Update orderDetails.totalAmount with calculated total if needed
+    if (
+      !orderDetails.totalAmount ||
+      orderDetails.totalAmount < calculatedTotal
+    ) {
+      console.log(
+        `Updating totalAmount from ${orderDetails.totalAmount} to ${calculatedTotal}`
+      );
+      orderDetails.totalAmount = calculatedTotal;
+    }
+
+    // Add total using the calculated value
+    productSummary += `\n\nTotal: ₹${calculatedTotal.toFixed(2)}`;
+  }
+  // Try using window.cartItems as a fallback for COD orders
+  else if (
+    window.cartItems &&
+    Array.isArray(window.cartItems) &&
+    window.cartItems.length > 0
+  ) {
+    console.log("Using window.cartItems fallback for order summary");
+
+    // Calculate the total from window.cartItems
+    const calculatedTotal = window.cartItems.reduce(
+      (sum, item) => sum + Number(item.price) * Number(item.quantity),
+      0
+    );
+
+    // Always use the calculated total or window.cartTotal, whichever is higher
+    const total = Math.max(calculatedTotal, window.cartTotal || 0);
+
+    // Update orderDetails.totalAmount with the correct total
+    orderDetails.totalAmount = total;
+    console.log(
+      `Setting order total to: ₹${total.toFixed(2)} from ${
+        window.cartItems.length
+      } items`
+    );
+
+    productSummary = window.cartItems
+      .map(
+        (item) =>
+          `${item.name} (${item.color}) - Quantity: ${item.quantity} - ₹${
+            Number(item.price) * Number(item.quantity)
+          }`
+      )
+      .join("\n");
+
+    // Add total using the newly calculated value
+    productSummary += `\n\nTotal: ₹${total.toFixed(2)}`;
+
+    // Update orderDetails to include the cart items for future reference
+    orderDetails.cartItems = window.cartItems;
   } else if (orderDetails.order_summary) {
     // Fallback to order_summary string
     productSummary = orderDetails.order_summary;
@@ -79,6 +135,25 @@ export async function sendOrderConfirmationToAdmin(
       orderDetails.color || "Silver"
     }\nQuantity: ${orderDetails.quantity || "1"}`;
   }
+
+  // Determine payment method - Adding more robust detection
+  const isCOD =
+    paymentResponse?.cod === true ||
+    orderDetails.payment_method === "cod" ||
+    (typeof paymentResponse?.payment_method === "string" &&
+      paymentResponse.payment_method.toLowerCase() === "cod");
+
+  console.log("Payment method detection:", {
+    fromResponse: paymentResponse?.payment_method,
+    fromOrderDetails: orderDetails.payment_method,
+    isCodFlag: paymentResponse?.cod,
+    finalIsCOD: isCOD,
+    hasCartItems: Boolean(orderDetails.cartItems?.length),
+    windowCartItemsCount: window.cartItems?.length || 0,
+  });
+
+  const paymentMethod = isCOD ? "Cash on Delivery (COD)" : "Razorpay (Online)";
+  const paymentStatus = isCOD ? "Pending - COD" : "Successful";
 
   // Format the order details for the email with full summary
   const formattedOrderDetails = `
@@ -92,17 +167,25 @@ Pincode: ${orderDetails.pincode || "N/A"}
 Order Summary:
 ${productSummary}
 
-Total Amount: ₹${orderDetails.totalAmount?.toFixed(2) || "3999.00"} (INR)
+Total Amount: ₹${orderDetails.totalAmount?.toFixed(2)} (INR)
 
-Payment Status: Successful
+Payment Status: ${paymentStatus}
 Payment ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
-Payment Method: Razorpay
+Payment Method: ${paymentMethod}
+
+${
+  isCOD
+    ? "IMPORTANT: This is a Cash on Delivery order. Payment will be collected upon delivery."
+    : ""
+}
 `;
 
   // Prepare email data
   const emailData = {
     from_name: "ChillWing Fan Website",
-    subject: "New Order Received - ChillWing Fan",
+    subject: isCOD
+      ? "New COD Order Received - ChillWing Fan"
+      : "New Order Received - ChillWing Fan",
     to_email: process.env.ADMIN_EMAIL,
     message: formattedOrderDetails,
   };

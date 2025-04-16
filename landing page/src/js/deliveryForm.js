@@ -85,20 +85,53 @@ export function initDeliveryForm(cartItems, clearCart) {
 
   // Remove product selection fields completely instead of just hiding them
   function toggleProductSelectionFields() {
-    // Remove color select section if it exists
-    if (colorSelectSection && colorSelectSection.parentNode) {
-      colorSelectSection.parentNode.removeChild(colorSelectSection);
-    }
+    try {
+      // Remove color select section if it exists and has a parent
+      if (colorSelectSection && colorSelectSection.parentNode) {
+        colorSelectSection.parentNode.removeChild(colorSelectSection);
+      }
 
-    // Remove quantity input section if it exists
-    if (quantityInput && quantityInput.parentElement) {
-      quantityInput.parentElement.parentNode.removeChild(
-        quantityInput.parentElement
-      );
-    }
+      // Remove quantity input section if it exists and has a parent
+      if (
+        quantityInput &&
+        quantityInput.parentElement &&
+        quantityInput.parentElement.parentNode
+      ) {
+        quantityInput.parentElement.parentNode.removeChild(
+          quantityInput.parentElement
+        );
+      }
 
-    // Update order summary
-    updateOrderSummary();
+      // Update order summary
+      updateOrderSummary();
+    } catch (err) {
+      console.error("Error toggling product fields:", err);
+      // Still update the order summary even if removal fails
+      updateOrderSummary();
+    }
+  }
+
+  // Modify the payment section to include COD option
+  const paymentSection = document.querySelector(".payment-section");
+  if (paymentSection) {
+    // Update payment section to include payment options
+    paymentSection.innerHTML = `
+      <h3 style="margin-bottom: 10px">Payment Method</h3>
+      <div class="payment-options">
+        <div class="payment-option">
+          <input type="radio" id="payment-razorpay" name="payment_method" value="razorpay" checked />
+          <label for="payment-razorpay">Online Payment (Credit/Debit Card, UPI, Wallets)</label>
+        </div>
+        <div class="payment-option">
+          <input type="radio" id="payment-cod" name="payment_method" value="cod" />
+          <label for="payment-cod">Cash on Delivery (COD)</label>
+        </div>
+      </div>
+      <div class="payment-info">
+        Choose your preferred payment method. For online payments, you'll be redirected to our secure payment gateway.
+        For Cash on Delivery, payment will be collected upon delivery.
+      </div>
+    `;
   }
 
   deliveryForm.onsubmit = function (e) {
@@ -164,19 +197,73 @@ export function initDeliveryForm(cartItems, clearCart) {
       orderDetails.totalAmount
     );
 
-    // Process with Razorpay
-    if (window.initRazorpayPayment) {
-      window.initRazorpayPayment(orderDetails);
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Place Order";
+    // Check if COD is selected
+    const paymentMethod = formData.get("payment_method");
+    if (paymentMethod === "cod") {
+      // Handle COD order directly
+      handleCODOrder(orderDetails);
     } else {
-      // Show error if payment methods not available
-      deliveryForm.style.display = "none";
-      deliveryError.style.display = "block";
-      deliveryError.innerHTML =
-        "Payment processing is currently unavailable. Please try again later.";
+      // Process with Razorpay
+      if (window.initRazorpayPayment) {
+        window.initRazorpayPayment(orderDetails);
+      } else {
+        // Show error if payment methods not available
+        deliveryForm.style.display = "none";
+        deliveryError.style.display = "block";
+        deliveryError.innerHTML =
+          "Payment processing is currently unavailable. Please try again later.";
+      }
     }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Place Order";
   };
+
+  // Function to handle COD orders
+  function handleCODOrder(orderDetails) {
+    // Generate a unique order ID for COD orders
+    const orderId = "COD" + Date.now();
+
+    // Create response object similar to Razorpay's
+    const codResponse = {
+      razorpay_payment_id: orderId,
+      payment_method: "COD",
+      cod: true,
+    };
+
+    // Send email to admin
+    if (window.sendOrderConfirmationToAdmin) {
+      window
+        .sendOrderConfirmationToAdmin(orderDetails, codResponse)
+        .then(() => {
+          console.log("COD order confirmation email sent to admin");
+        })
+        .catch((error) => {
+          console.error("Failed to send COD order confirmation email:", error);
+        });
+    }
+
+    // Show success message
+    const deliverySuccess = document.getElementById("delivery-success");
+    const deliveryForm = document.getElementById("delivery-form");
+
+    if (deliveryForm && deliverySuccess) {
+      deliveryForm.style.display = "none";
+      deliverySuccess.style.display = "block";
+      deliverySuccess.innerHTML = `
+        <h3>Thank you! Your order has been placed.</h3>
+        <p>Order ID: ${orderId}</p>
+        <p>Amount: ₹${orderDetails.totalAmount.toFixed(2)}</p>
+        <p>Payment Method: Cash on Delivery</p>
+        <p>Your order will be processed soon.</p>
+      `;
+    }
+
+    // Clear cart
+    if (window.clearCart) {
+      window.clearCart();
+    }
+  }
 
   // Add event listeners to update order summary when color or quantity changes
   if (deliveryColor) {

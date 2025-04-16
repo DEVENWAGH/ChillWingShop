@@ -13,12 +13,33 @@ export function initPaymentGateway() {
     if (deliveryForm && deliverySuccess) {
       deliveryForm.style.display = "none";
       deliverySuccess.style.display = "block";
-      deliverySuccess.innerHTML = `
-        <h3>Thank you! Your order has been placed.</h3>
-        <p>Order ID: ${orderResponse.razorpay_payment_id}</p>
-        <p>Amount: ₹${orderDetails.totalAmount.toFixed(2)}</p>
-        <p>Your order will be processed soon.</p>
-      `;
+
+      // Make sure we use the correct total amount
+      let displayAmount = orderDetails.totalAmount;
+
+      // If cart has multiple items, ensure correct total is used
+      if (window.cartTotal && window.cartItems && window.cartItems.length > 0) {
+        displayAmount = window.cartTotal;
+        console.log("Using cart total for success message:", displayAmount);
+      }
+
+      // Display different success message based on payment method
+      if (orderResponse.cod) {
+        deliverySuccess.innerHTML = `
+          <h3>Thank you! Your order has been placed.</h3>
+          <p>Order ID: ${orderResponse.razorpay_payment_id}</p>
+          <p>Amount: ₹${displayAmount.toFixed(2)}</p>
+          <p>Payment Method: Cash on Delivery</p>
+          <p>Your order will be processed soon.</p>
+        `;
+      } else {
+        deliverySuccess.innerHTML = `
+          <h3>Thank you! Your order has been placed.</h3>
+          <p>Order ID: ${orderResponse.razorpay_payment_id}</p>
+          <p>Amount: ₹${displayAmount.toFixed(2)}</p>
+          <p>Your order will be processed soon.</p>
+        `;
+      }
     }
 
     // Send email notification to admin
@@ -105,8 +126,10 @@ export function initPaymentGateway() {
     }
   };
 
-  // Expose functions to global scope for use in HTML
+  // Expose functions to global scope for use in HTML and other modules
   window.initRazorpayPayment = initRazorpayPayment;
+  window.sendOrderConfirmationToAdmin = sendOrderConfirmationToAdmin;
+  window.handlePaymentSuccess = handlePaymentSuccess;
 
   // Connect to pay now buttons
   const payNowBtn = document.getElementById("pay-now");
@@ -182,7 +205,25 @@ export function initPaymentGateway() {
 
       // Get form data
       const formData = new FormData(newForm);
+
+      // Check payment method directly from the radio button
+      let paymentMethod = "razorpay"; // Default
+      const codRadio = document.getElementById("payment-cod");
+      if (codRadio && codRadio.checked) {
+        paymentMethod = "cod";
+      }
+
+      console.log("Selected payment method (from radio):", paymentMethod);
+      console.log(
+        "Selected payment method (from formData):",
+        formData.get("payment_method")
+      );
+
       const orderDetails = Object.fromEntries(formData);
+      // Ensure payment method is correctly set in orderDetails
+      orderDetails.payment_method = paymentMethod;
+
+      console.log("Order details payment_method:", orderDetails.payment_method);
 
       // Get the current selected color and quantity from the form
       const color = orderDetails.color || "Silver";
@@ -214,8 +255,14 @@ export function initPaymentGateway() {
         deliveryResult.innerHTML = "Processing your order...";
       }
 
-      // Process with Razorpay
-      initRazorpayPayment(orderDetails);
+      // Check the payment method more explicitly with our reliable value
+      if (paymentMethod === "cod") {
+        console.log("COD payment selected - handling directly");
+        handleCODOrder(orderDetails);
+      } else {
+        console.log("Online payment selected - initializing Razorpay");
+        initRazorpayPayment(orderDetails);
+      }
 
       // Reset button
       if (submitBtn) {
@@ -225,6 +272,54 @@ export function initPaymentGateway() {
         }, 2000);
       }
     });
+  }
+
+  // Function to handle COD orders
+  function handleCODOrder(orderDetails) {
+    // Generate a unique order ID for COD orders
+    const orderId = "COD" + Date.now();
+
+    // Create response object similar to Razorpay's
+    const codResponse = {
+      razorpay_payment_id: orderId,
+      payment_method: "COD",
+      cod: true,
+    };
+
+    // Ensure cart items are included in the order details
+    if (
+      !orderDetails.cartItems &&
+      window.cartItems &&
+      window.cartItems.length > 0
+    ) {
+      console.log("Adding window.cartItems to COD order details");
+      orderDetails.cartItems = JSON.parse(JSON.stringify(window.cartItems));
+    }
+
+    // Add cart total if missing or incorrect
+    if (
+      window.cartTotal &&
+      (!orderDetails.totalAmount ||
+        orderDetails.totalAmount != window.cartTotal)
+    ) {
+      console.log(
+        "Updating COD order total amount from",
+        orderDetails.totalAmount,
+        "to",
+        window.cartTotal
+      );
+      orderDetails.totalAmount = window.cartTotal;
+    }
+
+    console.log("COD Order Details:", {
+      orderId,
+      cartItemCount: orderDetails.cartItems?.length || 0,
+      totalAmount: orderDetails.totalAmount,
+      windowCartTotal: window.cartTotal,
+    });
+
+    // Call the existing payment success handler
+    handlePaymentSuccess(codResponse, orderDetails);
   }
 
   // Update checkout button

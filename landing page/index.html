@@ -433,14 +433,44 @@
 
           <!-- Hidden fields -->
           <input type="hidden" name="botcheck" style="display: none" />
-          <input type="hidden" name="payment_method" value="razorpay" />
+          <input
+            type="hidden"
+            id="payment_method_field"
+            name="payment_method"
+            value="razorpay"
+          />
 
           <div class="payment-section">
             <h3 style="margin-bottom: 10px">Payment Method</h3>
+            <div class="payment-options">
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="payment-razorpay"
+                  name="payment_method_radio"
+                  value="razorpay"
+                  checked
+                  onchange="document.getElementById('payment_method_field').value = 'razorpay'"
+                />
+                <label for="payment-razorpay"
+                  >Online Payment (Credit/Debit Card, UPI, Wallets)</label
+                >
+              </div>
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="payment-cod"
+                  name="payment_method_radio"
+                  value="cod"
+                  onchange="document.getElementById('payment_method_field').value = 'cod'"
+                />
+                <label for="payment-cod">Cash on Delivery (COD)</label>
+              </div>
+            </div>
             <div class="payment-info">
-              Payment will be processed securely via Razorpay. We accept
-              Credit/Debit Cards, UPI, Wallets & more. Your payment will be
-              processed in Indian Rupees (INR).
+              Choose your preferred payment method. For online payments, you'll
+              be redirected to our secure payment gateway. For Cash on Delivery,
+              payment will be collected upon delivery.
             </div>
           </div>
 

@@ -689,6 +689,38 @@ img {
   animation: highlight 1s ease-in-out 2;
 }
 
+/* Cart Icon Enhancement */
+.cart-icon {
+  margin-left: 20px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  z-index: 1000;
+  padding: 8px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.cart-icon:hover {
+  transform: scale(1.1);
+}
+
+.cart-icon.clicked {
+  opacity: 0.7;
+}
+
+/* Ensure cart count is visible and properly positioned */
+.cart-count {
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 8px;
+  font-size: 12px;
+  vertical-align: top;
+  margin-left: 2px;
+  position: relative;
+  z-index: 1001;
+}
+
 /*CONTACT*/
 
 .contact-info {
