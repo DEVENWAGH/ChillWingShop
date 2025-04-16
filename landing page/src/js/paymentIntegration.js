@@ -95,7 +95,7 @@ export function initPaymentGateway() {
         currency: "INR",
         name: "ChillWing Fan",
         description: "Payment for Pocket Breeze 3-in-1 Mini Turbo Fan",
-        image: "/black.png",
+        image: "black.png",
         handler: function (response) {
           // Payment successful
           handlePaymentSuccess(response, orderDetails);

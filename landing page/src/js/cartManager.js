@@ -37,11 +37,11 @@ export function initCartManager() {
   function getSelectedImg() {
     const active = document.querySelector(".color.active");
     if (active) {
-      if (active.classList.contains("black")) return "/black.png";
-      if (active.classList.contains("silver")) return "/silver.png";
-      if (active.classList.contains("pink")) return "/pink.png";
+      if (active.classList.contains("black")) return "black.png";
+      if (active.classList.contains("silver")) return "silver.png";
+      if (active.classList.contains("pink")) return "pink.png";
     }
-    return "/silver.png";
+    return "silver.png";
   }
 
   // Buy Now buttons functionality
@@ -211,7 +211,7 @@ export function initCartManager() {
         color: color,
         price: price,
         quantity: 1,
-        image: `/${color.toLowerCase()}.png`,
+        image: `${color.toLowerCase()}.png`,
       });
     }
 

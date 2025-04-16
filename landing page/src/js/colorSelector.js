@@ -7,9 +7,9 @@ const initColorSelector = () => {
   const colors = document.querySelectorAll(".color");
 
   const info = [
-    { src: "/black.png" },
-    { src: "/silver.png" },
-    { src: "/pink.png" },
+    { src: "black.png" },
+    { src: "silver.png" },
+    { src: "pink.png" },
   ];
 
   const handleColorChange = function (src) {
