@@ -12,7 +12,6 @@ export function initCartManager() {
   const addToCartBtn = document.getElementById("add-to-cart");
   const payNowBtn = document.getElementById("pay-now");
   const cartCount = document.getElementById("cart-count");
-  const modalImg = document.getElementById("modal-img");
   const modalColor = document.getElementById("modal-color");
   const deliveryModal = document.getElementById("delivery-modal");
   const deliveryForm = document.getElementById("delivery-form");
@@ -32,16 +31,6 @@ export function initCartManager() {
       if (active.classList.contains("pink")) return "Pink";
     }
     return "Silver";
-  }
-
-  function getSelectedImg() {
-    const active = document.querySelector(".color.active");
-    if (active) {
-      if (active.classList.contains("black")) return "black.png";
-      if (active.classList.contains("silver")) return "silver.png";
-      if (active.classList.contains("pink")) return "pink.png";
-    }
-    return "silver.png";
   }
 
   // Buy Now buttons functionality
