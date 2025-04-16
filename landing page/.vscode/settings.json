@@ -1,0 +1,7 @@
+{
+    "livePreview.defaultPreviewPath": "/index.html",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    }
+}
