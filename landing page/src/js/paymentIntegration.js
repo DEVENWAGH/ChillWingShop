@@ -336,13 +336,50 @@ export function initPaymentGateway() {
         return window.handleCheckout();
       } else {
         // Fallback code (simplified version of original handler)
+        // Check if cart is empty
+        const cartItems = window.cartItems || [];
+        if (cartItems.length === 0) {
+          // Hide cart overlay first
+          const cartOverlay = document.getElementById("cart-overlay");
+          if (cartOverlay) cartOverlay.style.display = "none";
+
+          // Show notification if available
+          if (window.showNotification) {
+            window.showNotification(
+              "Your cart is empty! Please add items before checkout."
+            );
+          }
+
+          // Redirect to the #about section
+          window.location.href = "/#about";
+
+          // After a short delay, scroll to the section and highlight the add to cart button
+          setTimeout(() => {
+            const aboutSection = document.getElementById("about");
+            if (aboutSection) {
+              aboutSection.scrollIntoView({ behavior: "smooth" });
+            }
+
+            // Highlight the "Add to Cart" button for a moment
+            const addToCartBtn = document.getElementById(
+              "add-to-cart-btn-about"
+            );
+            if (addToCartBtn) {
+              addToCartBtn.classList.add("highlight-btn");
+              setTimeout(() => {
+                addToCartBtn.classList.remove("highlight-btn");
+              }, 2000);
+            }
+          }, 100);
+
+          return false;
+        }
+
+        // If we have items in cart, proceed with the checkout
         const cartOverlay = document.getElementById("cart-overlay");
         if (cartOverlay) cartOverlay.style.display = "none";
 
-        // Set delivery color
-        if (window.setDeliveryColor) window.setDeliveryColor();
-
-        // Show delivery modal
+        // Continue with the original checkout process
         const deliveryModal = document.getElementById("delivery-modal");
         if (deliveryModal) deliveryModal.style.display = "flex";
 

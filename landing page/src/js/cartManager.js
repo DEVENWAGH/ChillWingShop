@@ -228,13 +228,16 @@ export function initCartManager() {
     if (cartItems.length === 0) {
       cartEmptyMessage.style.display = "block";
       cartTotalElement.style.display = "none";
-      checkoutBtn.disabled = true;
+      // Remove the disabled attribute but keep visual indication
+      checkoutBtn.disabled = false; // CHANGED: Allow clicking even when cart is empty
       checkoutBtn.style.opacity = "0.5";
+      checkoutBtn.classList.add("empty-cart-checkout"); // Add class for styling
     } else {
       cartEmptyMessage.style.display = "none";
       cartTotalElement.style.display = "block";
       checkoutBtn.disabled = false;
       checkoutBtn.style.opacity = "1";
+      checkoutBtn.classList.remove("empty-cart-checkout"); // Remove class when cart has items
 
       let total = 0;
 
@@ -357,20 +360,25 @@ export function initCartManager() {
           "Your cart is empty! Please add items before checkout."
         );
 
-        // Scroll to About section
-        const aboutSection = document.getElementById("about");
-        if (aboutSection) {
-          aboutSection.scrollIntoView({ behavior: "smooth" });
-        }
+        // Redirect to the #about section
+        window.location.href = "/#about";
 
-        // Highlight the "Add to Cart" button for a moment
-        const addToCartBtn = document.getElementById("add-to-cart-btn-about");
-        if (addToCartBtn) {
-          addToCartBtn.classList.add("highlight-btn");
-          setTimeout(() => {
-            addToCartBtn.classList.remove("highlight-btn");
-          }, 2000);
-        }
+        // Scroll to About section after a short delay to ensure the hash change is processed
+        setTimeout(() => {
+          const aboutSection = document.getElementById("about");
+          if (aboutSection) {
+            aboutSection.scrollIntoView({ behavior: "smooth" });
+          }
+
+          // Highlight the "Add to Cart" button for a moment
+          const addToCartBtn = document.getElementById("add-to-cart-btn-about");
+          if (addToCartBtn) {
+            addToCartBtn.classList.add("highlight-btn");
+            setTimeout(() => {
+              addToCartBtn.classList.remove("highlight-btn");
+            }, 2000);
+          }
+        }, 100);
 
         return false;
       }
