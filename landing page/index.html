@@ -6,11 +6,24 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>ChillWing Fan - Pocket Breeze 3-in-1 Mini Turbo Fan</title>
+    <title>
+      ChillWing Fan - Pocket Breeze 3-in-1 Mini Turbo Fan | Portable Cooling
+    </title>
     <meta
       name="description"
-      content="The Portable Handheld Turbo Fan from ChillWing is a compact, rechargeable fan designed for strong airflow on the go. Perfect for travel, outdoor use, or hot commutes."
+      content="The Pocket Breeze 3-in-1 Mini Turbo Fan from ChillWing is a compact, rechargeable fan with powerful airflow for instant cooling. Perfect for travel, outdoor activities, and hot commutes."
     />
+    <meta
+      name="keywords"
+      content="portable fan, mini fan, turbo fan, rechargeable fan, cooling fan, pocket fan, handheld fan, ChillWing, Pocket Breeze"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ChillWing" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://chillwing.shop" />
+
+    <!-- Open Graph Meta Tags -->
     <meta
       property="og:title"
       content="ChillWing Fan - Pocket Breeze 3-in-1 Mini Turbo Fan"
@@ -20,7 +33,22 @@
       content="Compact, powerful, rechargeable fan with adjustable settings. Perfect for travel and outdoor activities."
     />
     <meta property="og:url" content="https://chillwing.shop" />
-    <link rel="canonical" href="https://chillwing.shop" />
+    <meta property="og:type" content="product" />
+    <meta property="og:image" content="https://chillwing.shop/silver.png" />
+    <meta property="og:site_name" content="ChillWing" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="ChillWing Fan - Pocket Breeze 3-in-1 Mini Turbo Fan"
+    />
+    <meta
+      name="twitter:description"
+      content="Compact, powerful, rechargeable fan with adjustable settings. Perfect for travel and outdoor activities."
+    />
+    <meta name="twitter:image" content="https://chillwing.shop/silver.png" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -30,19 +58,26 @@
       href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
     />
     <link rel="stylesheet" href="/src/style.css" />
+
+    <!-- Preload key resources -->
+    <link rel="preload" href="/silver.png" as="image" />
+    <link rel="preload" href="/src/style.css" as="style" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <div id="loading-indicator" class="loading-animation"></div>
 
     <!-- Navbar -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Main navigation">
       <div class="container">
         <div class="row justify-content-between align-items-center">
           <div class="logo">
             <a href="index.html"><span class="logo-circle"></span> ChillWing</a>
           </div>
           <ul class="menu">
-            <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
             <li class="nav-item">
               <a href="#about" class="nav-link">About</a>
             </li>
@@ -53,8 +88,10 @@
               <a href="#contact" class="nav-link">Contact</a>
             </li>
           </ul>
-          <div class="menu-btn"><i class="fa-solid fa-bars"></i></div>
-          <div id="cart-icon" class="cart-icon">
+          <div class="menu-btn" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+          <div id="cart-icon" class="cart-icon" aria-label="Shopping cart">
             <i class="fa fa-shopping-cart"></i>
             <span id="cart-count" class="cart-count">0</span>
           </div>
@@ -95,12 +132,12 @@
       <div class="container">
         <div class="row full-screen align-items-center">
           <div class="home-text">
-            <h2>
+            <h1>
               Pocket <span>Breeze</span> 3-in-1 <span>Mini Turbo Fan</span>
-            </h2>
+            </h1>
             <p>
               <b
-                >The Portable Handheld Turbo Fan 2 from IDOM Life is a compact,
+                >The Portable Handheld Turbo Fan from ChillWing is a compact,
                 rechargeable fan designed for strong airflow on the go. It
                 features turbo-powered wind, USB charging, a lightweight
                 handheld design, and adjustable speed settings. Perfect for
@@ -121,7 +158,12 @@
           </div>
           <div class="home-image">
             <div class="img-box">
-              <img src="/silver.png" alt="silver fan" />
+              <img
+                src="/silver.png"
+                alt="ChillWing Pocket Breeze 3-in-1 Mini Turbo Fan in silver color"
+                width="500"
+                height="500"
+              />
             </div>
           </div>
         </div>
@@ -134,14 +176,20 @@
         <div class="row">
           <div class="about-img">
             <div class="img-box">
-              <img src="/silver.png" alt="fan" id="main-watch" />
+              <img
+                src="/silver.png"
+                alt="ChillWing Pocket Breeze Fan with detailed view"
+                id="main-watch"
+                width="350"
+                height="350"
+              />
             </div>
           </div>
 
           <div class="about-text">
             <div class="section-title">
-              <h1 class="title">About Product</h1>
-              <h2 class="subtitle">Key Features:</h2>
+              <h2 class="title">About Product</h2>
+              <h3 class="subtitle">Key Features:</h3>
             </div>
 
             <div class="about-content">
@@ -211,18 +259,30 @@
       <div class="container">
         <div class="row">
           <div class="section-title">
-            <h1 class="title">Our Product</h1>
-            <h2 class="subtitle">Premium Turbo Fan Collection</h2>
+            <h2 class="title">Our Product</h2>
+            <h3 class="subtitle">Premium Turbo Fan Collection</h3>
           </div>
         </div>
       </div>
 
       <div class="product-img">
         <div class="image-box-1">
-          <img src="/asset 0.avif" alt="Pocket Breeze Fan" />
+          <img
+            src="/asset 0.avif"
+            alt="ChillWing Pocket Breeze Fan front view"
+            width="400"
+            height="600"
+            loading="lazy"
+          />
         </div>
         <div class="image-box-2">
-          <img src="/asset 1.avif" alt="Pocket Breeze Fan" />
+          <img
+            src="/asset 1.avif"
+            alt="ChillWing Pocket Breeze Fan side angle"
+            width="400"
+            height="600"
+            loading="lazy"
+          />
         </div>
         <div class="image-box-3">
           <img src="/asset 2.avif" alt="Pocket Breeze Fan" />
@@ -624,9 +684,68 @@
       </div>
     </footer>
 
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "Pocket Breeze 3-in-1 Mini Turbo Fan",
+        "image": [
+          "https://chillwing.shop/silver.png",
+          "https://chillwing.shop/black.png",
+          "https://chillwing.shop/pink.png"
+        ],
+        "description": "The Portable Handheld Turbo Fan from ChillWing is a compact, rechargeable fan designed for strong airflow on the go. Perfect for travel, outdoor use, or hot commutes.",
+        "sku": "CHILL-PB-01",
+        "brand": {
+          "@type": "Brand",
+          "name": "ChillWing"
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": "https://chillwing.shop",
+          "priceCurrency": "INR",
+          "price": "3999",
+          "priceValidUntil": "2024-12-31",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    </script>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "ChillWing",
+        "url": "https://chillwing.shop",
+        "logo": "https://chillwing.shop/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+916376868187",
+          "contactType": "customer service",
+          "availableLanguage": "English"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "18-4-237, near shardha school, aliabad",
+          "addressLocality": "Hyderabad",
+          "addressCountry": "IN"
+        },
+        "sameAs": [
+          "https://facebook.com/chillwing",
+          "https://twitter.com/chillwing",
+          "https://instagram.com/chillwing"
+        ]
+      }
+    </script>
+
     <!-- Scripts moved to modules -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"
+      defer
+    ></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
     <script type="module" src="/src/main.js"></script>
     <script>
       // Performance optimization for checkout flow - now handled in cartManager.js

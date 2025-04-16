@@ -5,6 +5,7 @@ import { initContactForm } from "./js/contactForm.js";
 import { initDeliveryForm } from "./js/deliveryForm.js";
 import { initCartManager } from "./js/cartManager.js";
 import { initPaymentGateway } from "./js/paymentIntegration.js";
+import initSeoHelper from "./js/seoHelper.js";
 // The emailService.js will be imported by paymentIntegration.js
 
 // Initialize all modules
@@ -13,6 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initColorSelector();
   initNavbar();
   initSwiper();
+
+  // Initialize SEO helper
+  initSeoHelper();
 
   // Initialize cart manager first to get cart items
   const { cartItems, clearCart, getCartTotal, showNotification } =
@@ -34,4 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize payment gateway
   initPaymentGateway();
+
+  // Add page loading optimization
+  const loadingIndicator = document.getElementById("loading-indicator");
+  if (loadingIndicator) {
+    window.addEventListener("load", () => {
+      loadingIndicator.classList.remove("show");
+    });
+  }
 });
