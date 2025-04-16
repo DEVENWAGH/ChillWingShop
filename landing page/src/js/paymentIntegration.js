@@ -41,10 +41,12 @@ export function initPaymentGateway() {
       // Get correct cart total either from orderDetails or window.cartTotal
       let amount = 0;
 
-      // If using cart checkout, prioritize window.cartTotal
-      if (window.cartTotal && cartItems && cartItems.length > 0) {
+      // Use window.cartItems instead of cartItems (fixes checkout bug)
+      if (window.cartTotal && window.cartItems && window.cartItems.length > 0) {
         amount = window.cartTotal;
         console.log("Using cart total for payment:", amount);
+        // Also attach cartItems to orderDetails for email summary
+        orderDetails.cartItems = window.cartItems;
       }
       // Use orderDetails.totalAmount if available
       else if (orderDetails.totalAmount) {
@@ -259,6 +261,11 @@ export function initPaymentGateway() {
           totalAmount: window.cartTotal,
         };
         console.log("Cart total set for checkout:", window.cartTotal);
+      }
+
+      // Trigger order summary update to refresh with latest cart items
+      if (window.setDeliveryColor) {
+        setTimeout(() => window.setDeliveryColor(), 100);
       }
     });
   }

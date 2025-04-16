@@ -49,25 +49,55 @@ export async function sendOrderConfirmationToAdmin(
   orderDetails,
   paymentResponse
 ) {
-  // Format the order details for the email with proper INR formatting
+  // Compose the product summary from cart items if available
+  let productSummary = "";
+
+  // Try to use cartItems if present (array of items)
+  if (
+    orderDetails.cartItems &&
+    Array.isArray(orderDetails.cartItems) &&
+    orderDetails.cartItems.length > 0
+  ) {
+    productSummary = orderDetails.cartItems
+      .map(
+        (item) =>
+          `${item.name} (${item.color}) - Quantity: ${item.quantity} - ₹${
+            Number(item.price) * Number(item.quantity)
+          }`
+      )
+      .join("\n");
+    // Add total
+    productSummary += `\n\nTotal: ₹${
+      orderDetails.totalAmount?.toFixed(2) || "3999.00"
+    }`;
+  } else if (orderDetails.order_summary) {
+    // Fallback to order_summary string
+    productSummary = orderDetails.order_summary;
+  } else {
+    // Fallback to single product
+    productSummary = `Product: Pocket Breeze 3-in-1 Mini Turbo Fan\nColor: ${
+      orderDetails.color || "Silver"
+    }\nQuantity: ${orderDetails.quantity || "1"}`;
+  }
+
+  // Format the order details for the email with full summary
   const formattedOrderDetails = `
-    Order ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
-    Customer Name: ${orderDetails.name || "N/A"}
-    Email: ${orderDetails.email || "N/A"}
-    Phone: ${orderDetails.phone || "N/A"}
-    Address: ${orderDetails.address || "N/A"}
-    Pincode: ${orderDetails.pincode || "N/A"}
-    
-    Product: Pocket Breeze 3-in-1 Mini Turbo Fan
-    Color: ${orderDetails.color || "Silver"}
-    Quantity: ${orderDetails.quantity || "1"}
-    
-    Total Amount: ₹${orderDetails.totalAmount?.toFixed(2) || "3999.00"} (INR)
-    
-    Payment Status: Successful
-    Payment ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
-    Payment Method: Razorpay
-  `;
+Order ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
+Customer Name: ${orderDetails.name || "N/A"}
+Email: ${orderDetails.email || "N/A"}
+Phone: ${orderDetails.phone || "N/A"}
+Address: ${orderDetails.address || "N/A"}
+Pincode: ${orderDetails.pincode || "N/A"}
+
+Order Summary:
+${productSummary}
+
+Total Amount: ₹${orderDetails.totalAmount?.toFixed(2) || "3999.00"} (INR)
+
+Payment Status: Successful
+Payment ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
+Payment Method: Razorpay
+`;
 
   // Prepare email data
   const emailData = {

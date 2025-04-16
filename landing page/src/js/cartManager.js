@@ -78,6 +78,9 @@ export function initCartManager() {
           return;
         }
 
+        // Ensure cart summary is up-to-date before showing delivery modal
+        updateCartDisplay();
+
         // If cart has items, proceed with checkout
         window.setDeliveryColor();
         deliveryModal.style.display = "flex";
@@ -179,7 +182,18 @@ export function initCartManager() {
     cartItems = [];
     cart = 0;
     cartCount.textContent = "0";
+
+    // Make sure window.cartItems is also reset to empty array
+    window.cartItems = [];
+
+    // Log cart clearing for debugging
+    console.log("Cart cleared successfully");
+
+    // Update local storage
     saveCart();
+
+    // Update the cart display immediately
+    updateCartDisplay();
   }
 
   // Add to Cart functionality
@@ -321,12 +335,20 @@ export function initCartManager() {
       // Prevent default to avoid any browser delays
       e.preventDefault();
 
+      // Always use the latest cart state from window.cartItems
+      const currentCartItems = window.cartItems || cartItems;
+
+      // Prevent checkout if cart is empty
+      if (!currentCartItems || currentCartItems.length === 0) {
+        return;
+      }
+
       // Show loading indicator for visual feedback
       const loadingIndicator = document.getElementById("loading-indicator");
       if (loadingIndicator) loadingIndicator.classList.add("show");
 
       // Check if cart is empty - prevent checkout if empty
-      if (cartItems.length === 0) {
+      if (currentCartItems.length === 0) {
         // Hide cart overlay immediately
         cartOverlay.style.display = "none";
 

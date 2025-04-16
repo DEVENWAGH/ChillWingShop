@@ -83,6 +83,12 @@
           src="/video/Untitled (Desktop Wallpaper).mp4"
           type="video/mp4"
         />
+        <track
+          kind="subtitles"
+          src="/video/subtitles-en.vtt"
+          srclang="en"
+          label="English"
+        />
         Your browser does not support the video tag.
       </video>
 
@@ -213,34 +219,34 @@
 
       <div class="product-img">
         <div class="image-box-1">
-          <img src="/asset 0.avif" alt="Product Image" />
+          <img src="/asset 0.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-2">
-          <img src="/asset 1.avif" alt="Product Image" />
+          <img src="/asset 1.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-3">
-          <img src="/asset 2.avif" alt="Product Image" />
+          <img src="/asset 2.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-4">
-          <img src="/asset 3.avif" alt="Product Image" />
+          <img src="/asset 3.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-5">
-          <img src="/asset 4.avif" alt="Product Image" />
+          <img src="/asset 4.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-6">
-          <img src="/asset 5.avif" alt="Product Image" />
+          <img src="/asset 5.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-7">
-          <img src="/asset 6.avif" alt="Product Image" />
+          <img src="/asset 6.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-8">
-          <img src="/asset 7.avif" alt="Product Image" />
+          <img src="/asset 7.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-9">
-          <img src="/asset 8.avif" alt="Product Image" />
+          <img src="/asset 8.avif" alt="Pocket Breeze Fan" />
         </div>
         <div class="image-box-10">
-          <img src="/asset 9.avif" alt="Product Image" />
+          <img src="/asset 9.avif" alt="Pocket Breeze Fan" />
         </div>
       </div>
     </section>
@@ -329,7 +335,9 @@
 
           <!-- Color selection section that will be hidden when cart has items -->
           <div id="color-select-section" style="margin: 15px 0 10px 0">
-            <label style="display: block; margin-bottom: 8px; font-weight: 500"
+            <label
+              for="delivery-color"
+              style="display: block; margin-bottom: 8px; font-weight: 500"
               >Select Color:</label
             >
             <select
@@ -346,10 +354,13 @@
 
           <!-- Quantity input that will be hidden when cart has items -->
           <div>
-            <label style="display: block; margin-bottom: 8px; font-weight: 500"
+            <label
+              for="delivery-quantity"
+              style="display: block; margin-bottom: 8px; font-weight: 500"
               >Quantity:</label
             >
             <input
+              id="delivery-quantity"
               type="number"
               name="quantity"
               min="1"

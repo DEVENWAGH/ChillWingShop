@@ -4,7 +4,6 @@
 export function initDeliveryForm(cartItems, clearCart) {
   const deliveryForm = document.getElementById("delivery-form");
   const deliveryResult = document.getElementById("delivery-result");
-  const deliverySuccess = document.getElementById("delivery-success");
   const deliveryError = document.getElementById("delivery-error");
   const deliveryColor = document.getElementById("delivery-color");
   const colorSelectSection = document.getElementById("color-select-section");
@@ -19,8 +18,8 @@ export function initDeliveryForm(cartItems, clearCart) {
   const pincodeInput = document.querySelector('input[name="pincode"]');
   if (pincodeInput) {
     pincodeInput.addEventListener("input", function (e) {
-      // Allow only numbers
-      this.value = this.value.replace(/[^0-9]/g, "");
+      // Allow only numbers - using \D instead of [^0-9]
+      this.value = this.value.replace(/\D/g, "");
 
       // Limit to 6 digits
       if (this.value.length > 6) {
@@ -36,34 +35,17 @@ export function initDeliveryForm(cartItems, clearCart) {
     // Clear previous content
     orderSummaryContainer.innerHTML = "";
 
-    if (cartItems.length === 0) {
-      // If cart is empty, show just the selected color and quantity
-      const color = deliveryColor.value;
-      const quantity = parseInt(quantityInput.value) || 1;
-      const price = 3999;
-      const itemTotal = price * quantity;
+    // Use window.cartItems to always get latest cart state
+    const currentCartItems = window.cartItems || [];
 
-      orderSummaryContainer.innerHTML = `
-        <div class="order-item">
-          <div class="order-item-details">
-            <div class="order-item-name">Pocket Breeze 3-in-1 Mini Turbo Fan (${color})</div>
-            <div class="order-item-price">₹${price.toFixed(
-              2
-            )} × ${quantity}</div>
-          </div>
-          <div class="order-item-total">₹${itemTotal.toFixed(2)}</div>
-        </div>
-        <div class="order-total">Total: ₹${itemTotal.toFixed(2)}</div>
-      `;
-    } else {
-      // If there are items in cart, show all items
+    if (currentCartItems.length > 0) {
+      // Always show cart items if present
       let total = 0;
       let orderItemsHTML = "";
 
-      cartItems.forEach((item) => {
-        // Ensure price and quantity are numbers
+      currentCartItems.forEach((item) => {
         const price = Number(item.price);
-        const quantity = Number(item.quantity);
+        const quantity = Number(item.quantity); // <-- this is the cart quantity
         const itemTotal = price * quantity;
         total += itemTotal;
 
@@ -92,24 +74,27 @@ export function initDeliveryForm(cartItems, clearCart) {
         "Order summary total (cart items):",
         total,
         "for",
-        cartItems.length,
+        currentCartItems.length,
         "items"
       );
+    } else {
+      // If cart is empty, show nothing or a message
+      orderSummaryContainer.innerHTML = `<div class="order-total">Cart is empty.</div>`;
     }
   }
 
-  // Toggle product selection fields based on cart state
+  // Remove product selection fields completely instead of just hiding them
   function toggleProductSelectionFields() {
-    if (colorSelectSection && quantityInput) {
-      if (cartItems.length > 0) {
-        // Hide color and quantity selectors when items are in cart
-        colorSelectSection.style.display = "none";
-        quantityInput.parentElement.style.display = "none";
-      } else {
-        // Show color and quantity selectors when cart is empty
-        colorSelectSection.style.display = "block";
-        quantityInput.parentElement.style.display = "block";
-      }
+    // Remove color select section if it exists
+    if (colorSelectSection && colorSelectSection.parentNode) {
+      colorSelectSection.parentNode.removeChild(colorSelectSection);
+    }
+
+    // Remove quantity input section if it exists
+    if (quantityInput && quantityInput.parentElement) {
+      quantityInput.parentElement.parentNode.removeChild(
+        quantityInput.parentElement
+      );
     }
 
     // Update order summary
@@ -226,6 +211,9 @@ export function initDeliveryForm(cartItems, clearCart) {
 
     // Toggle fields and update summary
     toggleProductSelectionFields();
+
+    // Always update order summary with latest cart state
+    updateOrderSummary();
   };
 
   // Pre-initialize order summary for cached items
@@ -251,4 +239,19 @@ export function initDeliveryForm(cartItems, clearCart) {
 
   // Initialize product selection fields and order summary
   toggleProductSelectionFields();
+
+  // Always update order summary when modal is shown (in case cart changed)
+  if (deliveryModal) {
+    deliveryModal.addEventListener("transitionend", updateOrderSummary);
+    // Also update immediately when modal is displayed
+    const observer = new MutationObserver(() => {
+      if (deliveryModal.style.display === "flex") {
+        updateOrderSummary();
+      }
+    });
+    observer.observe(deliveryModal, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+  }
 }
