@@ -16,6 +16,7 @@ export function initPaymentGateway() {
       deliverySuccess.innerHTML = `
         Thank you! Your order has been placed.<br>
         Order ID: ${orderResponse.razorpay_payment_id}<br>
+        Amount: ₹${orderDetails.totalAmount.toFixed(2)}<br>
         Your order will be processed soon.
       `;
     }
@@ -37,9 +38,8 @@ export function initPaymentGateway() {
   // Initialize Razorpay payment
   const initRazorpayPayment = (orderDetails) => {
     try {
-      // Convert USD to INR (1 USD = approximately 75 INR)
-      const exchangeRate = 75;
-      const amountInINR = Math.round(orderDetails.totalAmount * exchangeRate);
+      // Price is already in INR - no conversion needed
+      const amountInINR = orderDetails.totalAmount;
 
       const options = {
         key: process.env.RAZORPAY_KEY_ID,
@@ -61,7 +61,7 @@ export function initPaymentGateway() {
           address: orderDetails.address,
           color: orderDetails.color,
           quantity: orderDetails.quantity,
-          original_amount_usd: orderDetails.totalAmount,
+          currency: "INR",
         },
         theme: {
           color: "#3691e6",
@@ -99,11 +99,17 @@ export function initPaymentGateway() {
         address: "",
         color: color,
         quantity: 1,
-        order_summary: `Pocket Breeze 3-in-1 Mini Turbo Fan (${color}) - Quantity: 1 - $45.00`,
+        order_summary: `Pocket Breeze 3-in-1 Mini Turbo Fan (${color}) - Quantity: 1 - ₹3999.00`,
+        totalAmount: 3999, // Default amount in INR
       };
 
       document.getElementById("product-modal").style.display = "none";
       document.getElementById("delivery-modal").style.display = "flex";
+
+      // Ensure the color dropdown is properly updated
+      if (window.setDeliveryColor) {
+        window.setDeliveryColor();
+      }
     });
   }
 
@@ -123,11 +129,11 @@ export function initPaymentGateway() {
 
       // Add order summary
       const color = orderDetails.color || "Silver";
-      const quantity = orderDetails.quantity || 1;
-      const price = 45.0;
+      const quantity = parseInt(orderDetails.quantity) || 1;
+      const price = 3999; // Price in INR
       const itemTotal = price * quantity;
       orderDetails.totalAmount = itemTotal;
-      orderDetails.order_summary = `Pocket Breeze 3-in-1 Mini Turbo Fan (${color}) - Quantity: ${quantity} - $${itemTotal.toFixed(
+      orderDetails.order_summary = `Pocket Breeze 3-in-1 Mini Turbo Fan (${color}) - Quantity: ${quantity} - ₹${itemTotal.toFixed(
         2
       )}`;
 

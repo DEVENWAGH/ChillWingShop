@@ -173,8 +173,8 @@
 
               <div class="price">
                 <h3 class="title">Item Price</h3>
-                <span class="new-price">$45.00</span>
-                <span class="old-price">$56.99</span>
+                <span class="new-price inr-price">3999</span>
+                <span class="old-price inr-price">4999</span>
               </div>
 
               <div style="display: flex; gap: 10px">
@@ -253,7 +253,7 @@
           <b>Pocket Breeze 3-in-1 Mini Turbo Fan</b>
         </div>
         <div class="modal-price">
-          Price: <span class="modal-price-value">$45.00</span>
+          Price: <span class="modal-price-value inr-price">3999</span>
         </div>
         <div class="modal-color">
           Color: <span id="modal-color">Silver</span>
@@ -315,11 +315,37 @@
             </small>
           </div>
 
-          <select name="color" id="delivery-color" required class="form-select">
-            <option value="Black">Black</option>
-            <option value="Silver">Silver</option>
-            <option value="Pink">Pink</option>
-          </select>
+          <div style="margin: 15px 0 10px 0">
+            <label style="display: block; margin-bottom: 8px; font-weight: 500"
+              >Select Color:</label
+            >
+
+            <!-- Hide custom color dropdown -->
+            <div
+              class="color-select-container"
+              id="color-select-container"
+              style="display: none"
+            >
+              <!-- ...existing code... -->
+            </div>
+
+            <!-- Show standard dropdown -->
+            <select
+              name="color"
+              id="delivery-color"
+              required
+              class="form-select"
+            >
+              <option value="Black">Black</option>
+              <option value="Silver" selected>Silver</option>
+              <option value="Pink">Pink</option>
+            </select>
+
+            <!-- Hide color palette -->
+            <div class="color-palette" style="display: none">
+              <!-- ...existing code... -->
+            </div>
+          </div>
 
           <input
             type="number"
@@ -517,7 +543,7 @@
           </div>
         </div>
 
-        <!-- Add Policy Links -->
+        <!-- Update Policy Links -->
         <div class="row policy-links">
           <div class="policy-links-container">
             <a
@@ -544,7 +570,7 @@
               rel="noopener"
               >Privacy Policy</a
             >
-            <a href="https://chillwing.shop#contact">Contact Us</a>
+            <a href="#contact">Contact Us</a>
           </div>
         </div>
       </div>

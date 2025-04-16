@@ -158,7 +158,8 @@ export function initCartManager() {
   }
 
   // Add to Cart functionality
-  function addItemToCart(color, price = 45.0) {
+  function addItemToCart(color, price = 3999) {
+    // Changed price to INR
     const existingItemIndex = cartItems.findIndex(
       (item) => item.color === color
     );
@@ -202,33 +203,29 @@ export function initCartManager() {
         total += item.price * item.quantity;
 
         const itemElement = document.createElement("div");
-        itemElement.style.display = "flex";
-        itemElement.style.alignItems = "center";
-        itemElement.style.marginBottom = "15px";
-        itemElement.style.padding = "10px";
-        itemElement.style.borderBottom = "1px solid #eee";
+        itemElement.className = "cart-item";
 
         itemElement.innerHTML = `
           <img src="${item.image}" alt="${
           item.color
-        } fan" style="width: 50px; height: 50px; margin-right: 15px; object-fit: contain;">
-          <div style="flex-grow: 1;">
+        } fan" class="cart-item-image">
+          <div class="cart-item-details">
             <div><b>${item.name}</b></div>
             <div>Color: ${item.color}</div>
-            <div>$${item.price.toFixed(2)} × ${item.quantity}</div>
+            <div>₹${item.price.toFixed(2)} × ${item.quantity}</div>
           </div>
-          <div>
-            <button class="quantity-btn" data-index="${index}" data-action="decrease" style="border: none; background: #f1f1f1; width: 25px; height: 25px; border-radius: 50%; cursor: pointer;">-</button>
-            <span style="margin: 0 10px;">${item.quantity}</span>
-            <button class="quantity-btn" data-index="${index}" data-action="increase" style="border: none; background: #f1f1f1; width: 25px; height: 25px; border-radius: 50%; cursor: pointer;">+</button>
-            <button class="remove-btn" data-index="${index}" style="border: none; background: #ff6b6b; color: white; margin-left: 10px; padding: 3px 8px; border-radius: 4px; cursor: pointer;">×</button>
+          <div class="cart-item-controls">
+            <button class="quantity-btn" data-index="${index}" data-action="decrease">-</button>
+            <span class="quantity-display">${item.quantity}</span>
+            <button class="quantity-btn" data-index="${index}" data-action="increase">+</button>
+            <button class="remove-btn" data-index="${index}">×</button>
           </div>
         `;
 
         cartItemsContainer.appendChild(itemElement);
       });
 
-      cartTotalElement.textContent = `Total: $${total.toFixed(2)}`;
+      cartTotalElement.textContent = `Total: ₹${total.toFixed(2)}`;
 
       // Add event listeners to quantity buttons
       document.querySelectorAll(".quantity-btn").forEach((btn) => {
@@ -291,11 +288,25 @@ export function initCartManager() {
   if (checkoutBtn && deliveryModal) {
     checkoutBtn.addEventListener("click", function () {
       cartOverlay.style.display = "none";
-      window.setDeliveryColor();
+
+      // Set delivery color based on selected color
+      if (window.setDeliveryColor) window.setDeliveryColor();
+
+      // Show delivery modal
       deliveryModal.style.display = "flex";
-      deliveryForm.style.display = "block";
-      deliverySuccess.style.display = "none";
-      deliveryError.style.display = "none";
+
+      // Show the form and hide success/error messages
+      if (deliveryForm) deliveryForm.style.display = "block";
+      if (deliverySuccess) deliverySuccess.style.display = "none";
+      if (deliveryError) deliveryError.style.display = "none";
+
+      // Auto-scroll to payment section for better UX
+      const paymentSection = document.querySelector(".payment-section");
+      if (paymentSection) {
+        setTimeout(() => {
+          paymentSection.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      }
     });
   }
 

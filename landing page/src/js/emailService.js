@@ -49,7 +49,7 @@ export async function sendOrderConfirmationToAdmin(
   orderDetails,
   paymentResponse
 ) {
-  // Format the order details for the email
+  // Format the order details for the email with proper INR formatting
   const formattedOrderDetails = `
     Order ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
     Customer Name: ${orderDetails.name || "N/A"}
@@ -62,7 +62,7 @@ export async function sendOrderConfirmationToAdmin(
     Color: ${orderDetails.color || "Silver"}
     Quantity: ${orderDetails.quantity || "1"}
     
-    Total Amount: $${orderDetails.totalAmount?.toFixed(2) || "45.00"}
+    Total Amount: ₹${orderDetails.totalAmount?.toFixed(2) || "3999.00"} (INR)
     
     Payment Status: Successful
     Payment ID: ${paymentResponse?.razorpay_payment_id || "N/A"}
