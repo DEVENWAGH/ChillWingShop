@@ -10,8 +10,29 @@ export function initDeliveryForm(cartItems, clearCart) {
 
   if (!deliveryForm) return;
 
+  // Pincode validation
+  const pincodeInput = document.querySelector('input[name="pincode"]');
+  if (pincodeInput) {
+    pincodeInput.addEventListener("input", function (e) {
+      // Allow only numbers
+      this.value = this.value.replace(/[^0-9]/g, "");
+
+      // Limit to 6 digits
+      if (this.value.length > 6) {
+        this.value = this.value.slice(0, 6);
+      }
+    });
+  }
+
   deliveryForm.onsubmit = function (e) {
     e.preventDefault();
+
+    // Validate pincode if present
+    if (pincodeInput && pincodeInput.value.length !== 6) {
+      alert("Please enter a valid 6-digit pincode");
+      pincodeInput.focus();
+      return false;
+    }
 
     // Show loading state
     const submitBtn = deliveryForm.querySelector('button[type="submit"]');
@@ -50,65 +71,24 @@ export function initDeliveryForm(cartItems, clearCart) {
     const formData = new FormData(deliveryForm);
     formData.append("order_summary", orderSummary);
 
-    // Convert to object and then JSON
-    const object = Object.fromEntries(formData);
-    const json = JSON.stringify(object);
+    // Convert to object for processing
+    const orderDetails = Object.fromEntries(formData);
 
-    // Submit to Web3Forms API
-    fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: json,
-    })
-      .then(async (response) => {
-        let json = await response.json();
-        if (response.status == 200) {
-          // Order successful
-          deliveryForm.style.display = "none";
-          deliverySuccess.style.display = "block";
-          deliveryError.style.display = "none";
+    // Add total amount to order details
+    orderDetails.totalAmount = total;
 
-          // Clear the cart after successful order
-          setTimeout(() => {
-            const deliveryModal = document.getElementById("delivery-modal");
-            deliveryModal.style.display = "none";
-            deliveryForm.reset();
-            deliveryForm.style.display = "block";
-            deliverySuccess.style.display = "none";
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Place Order";
-
-            // Clear cart
-            clearCart();
-          }, 3000);
-        } else {
-          console.log(response);
-          deliveryForm.style.display = "none";
-          deliveryError.style.display = "block";
-
-          setTimeout(() => {
-            deliveryError.style.display = "none";
-            deliveryForm.style.display = "block";
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Place Order";
-          }, 3000);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        deliveryForm.style.display = "none";
-        deliveryError.style.display = "block";
-
-        setTimeout(() => {
-          deliveryError.style.display = "none";
-          deliveryForm.style.display = "block";
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Place Order";
-        }, 3000);
-      });
+    // Process with Razorpay
+    if (window.initRazorpayPayment) {
+      window.initRazorpayPayment(orderDetails);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Place Order";
+    } else {
+      // Show error if payment methods not available
+      deliveryForm.style.display = "none";
+      deliveryError.style.display = "block";
+      deliveryError.innerHTML =
+        "Payment processing is currently unavailable. Please try again later.";
+    }
   };
 
   // Set color in delivery modal to match selected color

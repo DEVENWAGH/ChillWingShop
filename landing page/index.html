@@ -2,8 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChillWing Fan</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>ChillWing Fan - Pocket Breeze 3-in-1 Mini Turbo Fan</title>
+    <meta
+      name="description"
+      content="The Portable Handheld Turbo Fan from ChillWing is a compact, rechargeable fan designed for strong airflow on the go. Perfect for travel, outdoor use, or hot commutes."
+    />
+    <meta
+      property="og:title"
+      content="ChillWing Fan - Pocket Breeze 3-in-1 Mini Turbo Fan"
+    />
+    <meta
+      property="og:description"
+      content="Compact, powerful, rechargeable fan with adjustable settings. Perfect for travel and outdoor activities."
+    />
+    <meta property="og:url" content="https://chillwing.shop" />
+    <link rel="canonical" href="https://chillwing.shop" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -35,97 +52,25 @@
             </li>
           </ul>
           <div class="menu-btn"><i class="fa-solid fa-bars"></i></div>
-          <div
-            id="cart-icon"
-            style="margin-left: 20px; color: white; cursor: pointer"
-          >
+          <div id="cart-icon" class="cart-icon">
             <i class="fa fa-shopping-cart"></i>
-            <span
-              id="cart-count"
-              style="
-                background: #e74c3c;
-                color: #fff;
-                border-radius: 50%;
-                padding: 2px 8px;
-                font-size: 12px;
-                vertical-align: top;
-                margin-left: 2px;
-              "
-              >0</span
-            >
+            <span id="cart-count" class="cart-count">0</span>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Cart Overlay -->
-    <div
-      id="cart-overlay"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 2100;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          background: #fff;
-          max-width: 500px;
-          width: 90%;
-          margin: auto;
-          padding: 30px 20px;
-          border-radius: 12px;
-          position: relative;
-          max-height: 80vh;
-          overflow-y: auto;
-        "
-      >
-        <button
-          id="close-cart"
-          style="
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-          "
-        >
-          &times;
-        </button>
+    <div id="cart-overlay" class="cart-overlay">
+      <div class="cart-container">
+        <button id="close-cart" class="close-btn">&times;</button>
         <h2 style="margin-bottom: 20px">Your Cart</h2>
-        <div id="cart-items-container" style="margin-bottom: 20px">
+        <div id="cart-items-container" class="cart-items-container">
           <!-- Cart items will be inserted here dynamically -->
         </div>
-        <div id="cart-empty" style="text-align: center; margin: 20px 0">
-          Your cart is empty
-        </div>
-        <div
-          id="cart-total"
-          style="
-            font-weight: bold;
-            margin: 20px 0;
-            text-align: right;
-            font-size: 18px;
-          "
-        >
-          Total: $0.00
-        </div>
-        <button
-          id="checkout-btn"
-          class="btn1"
-          style="width: 100%; background: #27ae60"
-        >
-          Checkout
-        </button>
+        <div id="cart-empty" class="cart-empty">Your cart is empty</div>
+        <div id="cart-total" class="cart-total">Total: $0.00</div>
+        <button id="checkout-btn" class="btn1 checkout-btn">Checkout</button>
       </div>
     </div>
 
@@ -154,7 +99,7 @@
                 travel, outdoor use, or hot commutes.</b
               >
             </p>
-            <div style="display: flex; gap: 10px">
+            <div class="flex-container">
               <a href="#" class="btn1" id="buy-now-btn">Buy Now</a>
               <button
                 class="btn1"
@@ -299,260 +244,120 @@
     </section>
 
     <!-- Product Details Modal -->
-    <div
-      id="product-modal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          background: #fff;
-          max-width: 400px;
-          width: 90%;
-          margin: auto;
-          padding: 30px 20px;
-          border-radius: 12px;
-          position: relative;
-        "
-      >
-        <button
-          id="close-modal"
-          style="
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-          "
-        >
-          &times;
-        </button>
+    <div id="product-modal" class="product-modal">
+      <div class="modal-container">
+        <button id="close-modal" class="close-btn">&times;</button>
         <h2 style="margin-bottom: 10px">Product Details</h2>
-        <img
-          id="modal-img"
-          src="/silver.png"
-          alt="Product"
-          style="
-            width: 100%;
-            max-width: 200px;
-            display: block;
-            margin: auto 0 20px auto;
-          "
-        />
-        <div style="margin-bottom: 10px">
+        <img id="modal-img" src="/silver.png" alt="Product" class="modal-img" />
+        <div class="modal-product-title">
           <b>Pocket Breeze 3-in-1 Mini Turbo Fan</b>
         </div>
-        <div style="margin-bottom: 10px">
-          Price: <span style="color: #3691e6; font-weight: bold">$45.00</span>
+        <div class="modal-price">
+          Price: <span class="modal-price-value">$45.00</span>
         </div>
-        <div style="margin-bottom: 20px">
+        <div class="modal-color">
           Color: <span id="modal-color">Silver</span>
         </div>
-        <button
-          id="add-to-cart"
-          class="btn1"
-          style="width: 100%; margin-bottom: 10px"
-        >
+        <button id="add-to-cart" class="btn1 add-to-cart-btn">
           Add to Cart
         </button>
-        <button
-          id="pay-now"
-          class="btn1"
-          style="width: 100%; background: #27ae60"
-        >
-          Pay Now
-        </button>
+        <button id="pay-now" class="btn1 pay-now-btn">Pay Now</button>
       </div>
     </div>
 
     <!-- Product Delivery Modal -->
-    <div
-      id="delivery-modal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          background: #fff;
-          max-width: 400px;
-          width: 90%;
-          margin: auto;
-          padding: 30px 20px;
-          border-radius: 12px;
-          position: relative;
-        "
-      >
-        <button
-          id="close-delivery-modal"
-          style="
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-          "
-        >
-          &times;
-        </button>
-        <h2 style="margin-bottom: 10px">Delivery Details</h2>
+    <div id="delivery-modal" class="delivery-modal">
+      <div class="delivery-container">
+        <button id="close-delivery-modal" class="close-btn">&times;</button>
+        <h2 style="margin-bottom: 10px">Delivery & Payment Details</h2>
         <form id="delivery-form">
-          <div style="margin-bottom: 10px">
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+            class="form-input"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+            class="form-input"
+          />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone Number"
+            required
+            class="form-input"
+          />
+          <input
+            type="text"
+            name="address"
+            placeholder="Delivery Address"
+            required
+            class="form-input"
+          />
+
+          <div class="form-input-wrapper">
             <input
               type="text"
-              name="name"
-              placeholder="Full Name"
+              name="pincode"
+              placeholder="Pincode / ZIP Code"
               required
-              style="
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              "
+              maxlength="6"
+              pattern="[0-9]{6}"
+              class="form-input"
             />
+            <small class="form-pincode-help">
+              Enter 6-digit pincode for delivery availability
+            </small>
           </div>
-          <div style="margin-bottom: 10px">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              required
-              style="
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              "
-            />
-          </div>
-          <div style="margin-bottom: 10px">
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone Number"
-              required
-              style="
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              "
-            />
-          </div>
-          <div style="margin-bottom: 10px">
-            <input
-              type="text"
-              name="address"
-              placeholder="Delivery Address"
-              required
-              style="
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              "
-            />
-          </div>
-          <div style="margin-bottom: 10px">
-            <select
-              name="color"
-              id="delivery-color"
-              required
-              style="
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              "
-            >
-              <option value="Black">Black</option>
-              <option value="Silver">Silver</option>
-              <option value="Pink">Pink</option>
-            </select>
-          </div>
-          <div style="margin-bottom: 20px">
-            <input
-              type="number"
-              name="quantity"
-              min="1"
-              value="1"
-              required
-              style="
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              "
-            />
-          </div>
-          <!-- Add hidden field for admin email -->
+
+          <select name="color" id="delivery-color" required class="form-select">
+            <option value="Black">Black</option>
+            <option value="Silver">Silver</option>
+            <option value="Pink">Pink</option>
+          </select>
+
           <input
-            type="hidden"
-            name="admin_email"
-            value="wagh1.2.3.002@gmail.com"
+            type="number"
+            name="quantity"
+            min="1"
+            value="1"
+            required
+            class="form-input"
           />
-          <!-- Add the access key as hidden input -->
-          <input
-            type="hidden"
-            name="access_key"
-            value="3af0372a-7376-40d5-87b6-9c1f9de71fdd"
-          />
-          <!-- Add bot check field -->
-          <input type="checkbox" name="botcheck" style="display: none" />
-          <button type="submit" class="btn1" style="width: 100%">
-            Place Order
+
+          <!-- Add hidden field for admin email - now handled via environment variable -->
+          <input type="hidden" name="botcheck" style="display: none" />
+          <input type="hidden" name="payment_method" value="razorpay" />
+
+          <div class="payment-section">
+            <h3 style="margin-bottom: 10px">Payment Method</h3>
+            <div class="payment-info">
+              Payment will be processed securely via Razorpay. We accept
+              Credit/Debit Cards, UPI, Wallets & more. Your payment will be
+              processed in Indian Rupees (INR).
+            </div>
+          </div>
+
+          <button type="submit" class="btn1 full-width-btn">
+            Proceed to Payment
           </button>
-          <div
-            id="delivery-result"
-            style="margin-top: 15px; text-align: center"
-          ></div>
+
+          <div id="delivery-result" class="delivery-result"></div>
         </form>
-        <div
-          id="delivery-success"
-          style="
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-            color: green;
-            font-weight: bold;
-          "
-        >
-          Thank you! Your order has been placed.
+
+        <div id="delivery-success" class="delivery-success">
+          Thank you! Your order has been placed. We'll process your order
+          shortly.
         </div>
-        <div
-          id="delivery-error"
-          style="
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-            color: red;
-            font-weight: bold;
-          "
-        >
-          There was an error processing your order. Please try again.
+
+        <div id="delivery-error" class="delivery-error">
+          There was an error processing your order. Please try again or contact
+          customer support.
         </div>
       </div>
     </div>
@@ -657,13 +462,7 @@
                 </div>
               </div>
 
-              <!-- Add access key as hidden input -->
-              <input
-                type="hidden"
-                name="access_key"
-                value="3af0372a-7376-40d5-87b6-9c1f9de71fdd"
-              />
-              <!-- Add bot check field -->
+              <!-- Add access key as hidden input - now handled via environment variable -->
               <input type="checkbox" name="botcheck" style="display: none" />
 
               <div class="row">
@@ -717,11 +516,43 @@
             </form>
           </div>
         </div>
+
+        <!-- Add Policy Links -->
+        <div class="row policy-links">
+          <div class="policy-links-container">
+            <a
+              href="https://merchant.razorpay.com/policy/QIEf4pTeFnACMk/shipping"
+              target="_blank"
+              rel="noopener"
+              >Shipping Policy</a
+            >
+            <a
+              href="https://merchant.razorpay.com/policy/QIEf4pTeFnACMk/terms"
+              target="_blank"
+              rel="noopener"
+              >Terms and Conditions</a
+            >
+            <a
+              href="https://merchant.razorpay.com/policy/QIEf4pTeFnACMk/refund"
+              target="_blank"
+              rel="noopener"
+              >Cancellations and Refunds</a
+            >
+            <a
+              href="https://merchant.razorpay.com/policy/QIEf4pTeFnACMk/privacy"
+              target="_blank"
+              rel="noopener"
+              >Privacy Policy</a
+            >
+            <a href="https://chillwing.shop#contact">Contact Us</a>
+          </div>
+        </div>
       </div>
     </footer>
 
     <!-- Scripts moved to modules -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

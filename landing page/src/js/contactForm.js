@@ -11,6 +11,9 @@ export function initContactForm() {
     e.preventDefault();
 
     const formData = new FormData(contactForm);
+    // Add the access key from environment variables
+    formData.append("access_key", process.env.EMAIL_ACCESS_KEY);
+
     const object = Object.fromEntries(formData);
     const json = JSON.stringify(object);
     contactResult.innerHTML = "Please wait...";
