@@ -51,9 +51,34 @@ export function initCartManager() {
       const newBtn = btn.cloneNode(true);
       btn.parentNode.replaceChild(newBtn, btn);
 
-      // Add the new direct-to-delivery event listener
+      // Add the new direct-to-delivery event listener with cart check
       newBtn.addEventListener("click", function (e) {
         e.preventDefault();
+
+        // Check if cart is empty
+        if (cartItems.length === 0) {
+          // Show notification
+          showNotification("Please add at least one item to your cart first!");
+
+          // Scroll to About section
+          const aboutSection = document.getElementById("about");
+          if (aboutSection) {
+            aboutSection.scrollIntoView({ behavior: "smooth" });
+          }
+
+          // Highlight the "Add to Cart" button for a moment
+          const addToCartBtn = document.getElementById("add-to-cart-btn-about");
+          if (addToCartBtn) {
+            addToCartBtn.classList.add("highlight-btn");
+            setTimeout(() => {
+              addToCartBtn.classList.remove("highlight-btn");
+            }, 2000);
+          }
+
+          return;
+        }
+
+        // If cart has items, proceed with checkout
         window.setDeliveryColor();
         deliveryModal.style.display = "flex";
         deliveryForm.style.display = "block";
@@ -200,7 +225,8 @@ export function initCartManager() {
       let total = 0;
 
       cartItems.forEach((item, index) => {
-        total += item.price * item.quantity;
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
 
         const itemElement = document.createElement("div");
         itemElement.className = "cart-item";
@@ -225,6 +251,11 @@ export function initCartManager() {
         cartItemsContainer.appendChild(itemElement);
       });
 
+      // Make cart items and total available globally for checkout
+      window.cartItems = JSON.parse(JSON.stringify(cartItems));
+      window.cartTotal = total;
+
+      // Update cart total display with INR symbol
       cartTotalElement.textContent = `Total: ₹${total.toFixed(2)}`;
 
       // Add event listeners to quantity buttons
@@ -286,33 +317,123 @@ export function initCartManager() {
 
   // Checkout button redirects to delivery form
   if (checkoutBtn && deliveryModal) {
-    checkoutBtn.addEventListener("click", function () {
+    checkoutBtn.addEventListener("click", function (e) {
+      // Prevent default to avoid any browser delays
+      e.preventDefault();
+
+      // Show loading indicator for visual feedback
+      const loadingIndicator = document.getElementById("loading-indicator");
+      if (loadingIndicator) loadingIndicator.classList.add("show");
+
+      // Check if cart is empty - prevent checkout if empty
+      if (cartItems.length === 0) {
+        // Hide cart overlay immediately
+        cartOverlay.style.display = "none";
+
+        // Hide loading indicator
+        if (loadingIndicator) loadingIndicator.classList.remove("show");
+
+        // Show notification
+        showNotification(
+          "Your cart is empty! Please add items before checkout."
+        );
+
+        // Scroll to About section
+        const aboutSection = document.getElementById("about");
+        if (aboutSection) {
+          aboutSection.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // Highlight the "Add to Cart" button for a moment
+        const addToCartBtn = document.getElementById("add-to-cart-btn-about");
+        if (addToCartBtn) {
+          addToCartBtn.classList.add("highlight-btn");
+          setTimeout(() => {
+            addToCartBtn.classList.remove("highlight-btn");
+          }, 2000);
+        }
+
+        return;
+      }
+
+      // If cart has items, proceed with checkout
+
+      // Immediately hide cart overlay for faster perceived response
       cartOverlay.style.display = "none";
 
-      // Set delivery color based on selected color
-      if (window.setDeliveryColor) window.setDeliveryColor();
-
-      // Show delivery modal
-      deliveryModal.style.display = "flex";
+      // Immediately show delivery modal while setting up other things
+      if (deliveryModal) deliveryModal.style.display = "flex";
 
       // Show the form and hide success/error messages
       if (deliveryForm) deliveryForm.style.display = "block";
       if (deliverySuccess) deliverySuccess.style.display = "none";
       if (deliveryError) deliveryError.style.display = "none";
 
-      // Auto-scroll to payment section for better UX
-      const paymentSection = document.querySelector(".payment-section");
-      if (paymentSection) {
-        setTimeout(() => {
-          paymentSection.scrollIntoView({ behavior: "smooth" });
-        }, 300);
+      // Pre-calculate the cart total for faster processing
+      if (window.getCartTotal) {
+        window.cartTotal = window.getCartTotal();
+        // Make it available to the global scope for Razorpay
+        window.orderDetails = {
+          totalAmount: window.cartTotal,
+        };
       }
+
+      // Hide loading indicator after short delay
+      setTimeout(() => {
+        if (loadingIndicator) loadingIndicator.classList.remove("show");
+      }, 500);
+
+      // Set delivery color in a non-blocking way
+      setTimeout(() => {
+        if (window.setDeliveryColor) window.setDeliveryColor();
+
+        // Auto-scroll to payment section for better UX
+        const paymentSection = document.querySelector(".payment-section");
+        if (paymentSection) {
+          paymentSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 10);
     });
   }
 
-  // Export cartItems and clearCart for use in delivery form
+  // Calculate and return current cart total
+  function getCartTotal() {
+    let total = 0;
+    cartItems.forEach((item) => {
+      const price = Number(item.price);
+      const quantity = Number(item.quantity);
+      total += price * quantity;
+    });
+    return total;
+  }
+
+  // Notification function to inform users,
+  function showNotification(message) {
+    // Check if notification element exists, if not create it
+    let notification = document.getElementById("cart-notification");
+
+    if (!notification) {
+      notification = document.createElement("div");
+      notification.id = "cart-notification";
+      notification.className = "cart-notification";
+      document.body.appendChild(notification);
+    }
+
+    // Set message and show
+    notification.textContent = message;
+    notification.classList.add("show");
+
+    // Hide after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove("show");
+    }, 3000);
+  }
+
+  // Export cartItems, clearCart and expose a getCartTotal function
   return {
     cartItems,
     clearCart,
+    getCartTotal,
+    showNotification,
   };
 }

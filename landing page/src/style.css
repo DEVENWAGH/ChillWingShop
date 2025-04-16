@@ -645,6 +645,50 @@ img {
   align-items: center;
 }
 
+/* Cart Notification Styles */
+.cart-notification {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--main-color);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2200;
+  font-weight: 500;
+  max-width: 90%;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  transform: translateX(-50%) translateY(-20px);
+}
+
+.cart-notification.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Add to Cart button highlight animation */
+@keyframes highlight {
+  0%,
+  100% {
+    background-color: #27ae60;
+    transform: scale(1);
+  }
+  50% {
+    background-color: #2ecc71;
+    transform: scale(1.1);
+  }
+}
+
+.highlight-btn {
+  animation: highlight 1s ease-in-out 2;
+}
+
 /*CONTACT*/
 
 .contact-info {
@@ -808,6 +852,68 @@ footer {
   margin-bottom: 1rem;
 }
 
+/* Features in Footer Styles */
+.features-footer {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 30px;
+}
+
+.features-container {
+  width: 100%;
+  color: var(--white);
+  text-align: center;
+}
+
+.features-container h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.features-list li {
+  padding: 8px 15px;
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+  box-sizing: border-box;
+  text-align: left;
+  color: var(--white);
+  font-size: 14px;
+  line-height: 1.6;
+  transition: transform 0.3s ease;
+}
+
+.features-list li:hover {
+  transform: translateY(-3px);
+}
+
+/* Responsive adjustments for feature list */
+@media (max-width: 991px) {
+  .features-list li {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 575px) {
+  .features-list li {
+    flex: 0 0 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+}
+
 /* Cart Styles */
 .cart-icon {
   margin-left: 20px;
@@ -951,16 +1057,23 @@ footer {
   z-index: 2000;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .delivery-container {
   background: #fff;
   max-width: 400px;
   width: 90%;
-  margin: auto;
+  margin: 30px auto;
   padding: 30px 20px;
   border-radius: 12px;
   position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .form-input {
@@ -1115,6 +1228,98 @@ footer {
 .policy-links-container a:hover {
   color: var(--main-color);
   text-decoration: underline;
+}
+
+/* Order Summary Styles */
+.order-summary {
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
+
+.order-summary h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.order-summary-container {
+  margin-bottom: 0;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item-details {
+  flex: 1;
+}
+
+.order-item-name {
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.order-item-price {
+  font-size: 13px;
+  color: #666;
+}
+
+.order-item-total {
+  font-weight: bold;
+  color: #3691e6;
+}
+
+.order-total {
+  margin-top: 10px;
+  text-align: right;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Add a loading animation for better perceived performance */
+.loading-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--main-color),
+    transparent
+  );
+  animation: loading-progress 1s ease-in-out infinite;
+  z-index: 2500;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.loading-animation.show {
+  opacity: 1;
+}
+
+@keyframes loading-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @media (max-width: 1200px) {

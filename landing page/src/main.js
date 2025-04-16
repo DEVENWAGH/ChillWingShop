@@ -15,10 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
   initSwiper();
 
   // Initialize cart manager first to get cart items
-  const { cartItems, clearCart } = initCartManager();
+  const { cartItems, clearCart, getCartTotal, showNotification } =
+    initCartManager();
 
-  // Make clearCart function available globally
+  // Make cart functions available globally
   window.clearCart = clearCart;
+  window.getCartTotal = getCartTotal;
+  window.showNotification = showNotification;
+
+  // Store initial cart total
+  window.cartTotal = getCartTotal();
 
   // Pass cart items to delivery form
   initDeliveryForm(cartItems, clearCart);

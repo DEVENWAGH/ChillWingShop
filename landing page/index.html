@@ -32,6 +32,8 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
+    <div id="loading-indicator" class="loading-animation"></div>
+
     <!-- Navbar -->
     <nav class="navbar">
       <div class="container">
@@ -270,6 +272,16 @@
       <div class="delivery-container">
         <button id="close-delivery-modal" class="close-btn">&times;</button>
         <h2 style="margin-bottom: 10px">Delivery & Payment Details</h2>
+
+        <!-- Order summary section -->
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div
+            id="order-summary-container"
+            class="order-summary-container"
+          ></div>
+        </div>
+
         <form id="delivery-form">
           <input
             type="text"
@@ -315,21 +327,11 @@
             </small>
           </div>
 
-          <div style="margin: 15px 0 10px 0">
+          <!-- Color selection section that will be hidden when cart has items -->
+          <div id="color-select-section" style="margin: 15px 0 10px 0">
             <label style="display: block; margin-bottom: 8px; font-weight: 500"
               >Select Color:</label
             >
-
-            <!-- Hide custom color dropdown -->
-            <div
-              class="color-select-container"
-              id="color-select-container"
-              style="display: none"
-            >
-              <!-- ...existing code... -->
-            </div>
-
-            <!-- Show standard dropdown -->
             <select
               name="color"
               id="delivery-color"
@@ -340,23 +342,25 @@
               <option value="Silver" selected>Silver</option>
               <option value="Pink">Pink</option>
             </select>
-
-            <!-- Hide color palette -->
-            <div class="color-palette" style="display: none">
-              <!-- ...existing code... -->
-            </div>
           </div>
 
-          <input
-            type="number"
-            name="quantity"
-            min="1"
-            value="1"
-            required
-            class="form-input"
-          />
+          <!-- Quantity input that will be hidden when cart has items -->
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-weight: 500"
+              >Quantity:</label
+            >
+            <input
+              type="number"
+              name="quantity"
+              min="1"
+              max="10"
+              value="1"
+              required
+              class="form-input"
+            />
+          </div>
 
-          <!-- Add hidden field for admin email - now handled via environment variable -->
+          <!-- Hidden fields -->
           <input type="hidden" name="botcheck" style="display: none" />
           <input type="hidden" name="payment_method" value="razorpay" />
 
@@ -543,6 +547,39 @@
           </div>
         </div>
 
+        <!-- Product Features Section -->
+        <div class="row features-footer">
+          <div class="features-container">
+            <h3>Key Features:</h3>
+            <ul class="features-list">
+              <li>
+                ✅ Foldable & Compact Design – Easy to carry and store in bags
+                or pockets.
+              </li>
+              <li>
+                ✅ Powerful High-Speed Motor – Provides strong airflow for
+                instant cooling.
+              </li>
+              <li>
+                ✅ USB Rechargeable Battery – Ensures long-lasting performance
+                on a single charge.
+              </li>
+              <li>
+                ✅ Adjustable Speed Settings – Choose from multiple fan speeds
+                to suit your needs.
+              </li>
+              <li>
+                ✅ Low Noise Operation – Enjoy quiet cooling at work, home, or
+                outdoors.
+              </li>
+              <li>
+                ✅ Lightweight & Ergonomic – Designed for comfortable handheld
+                use.
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <!-- Update Policy Links -->
         <div class="row policy-links">
           <div class="policy-links-container">
@@ -580,5 +617,18 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      // Performance optimization for checkout flow
+      document
+        .getElementById("checkout-btn")
+        .addEventListener("click", function () {
+          document.getElementById("loading-indicator").classList.add("show");
+          setTimeout(function () {
+            document
+              .getElementById("loading-indicator")
+              .classList.remove("show");
+          }, 800);
+        });
+    </script>
   </body>
 </html>
