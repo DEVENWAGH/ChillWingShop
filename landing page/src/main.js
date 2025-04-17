@@ -6,6 +6,7 @@ import { initDeliveryForm } from "./js/deliveryForm.js";
 import { initCartManager } from "./js/cartManager.js";
 import { initPaymentGateway } from "./js/paymentIntegration.js";
 import initSeoHelper from "./js/seoHelper.js";
+import { initReviewManager } from "./js/reviewManager.js";
 // The emailService.js will be imported by paymentIntegration.js
 
 // Initialize all modules
@@ -38,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize payment gateway
   initPaymentGateway();
+
+  // Initialize review manager
+  initReviewManager();
 
   // Add page loading optimization
   const loadingIndicator = document.getElementById("loading-indicator");

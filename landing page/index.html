@@ -490,6 +490,157 @@
       </div>
     </div>
 
+    <!-- Reviews Section -->
+    <section id="reviews" class="section-padding">
+      <div class="container">
+        <div class="row">
+          <div class="section-title">
+            <h1>Customer <span class="title">Reviews</span></h1>
+            <span class="subtitle">What our customers say</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="reviews-container">
+            <div class="rating-summary">
+              <div class="average-rating">4.7</div>
+              <div class="stars-container">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+              <div class="total-reviews">Based on 42 reviews</div>
+              <button class="btn1 write-review-btn" id="write-review-btn">
+                Write a Review
+              </button>
+            </div>
+
+            <div class="reviews-list">
+              <!-- Review 1 -->
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="reviewer-name">Amit Sharma</div>
+                  <div class="review-date">March 15, 2023</div>
+                </div>
+                <div class="review-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <div class="review-title">
+                  Best portable fan I've ever used!
+                </div>
+                <div class="review-content">
+                  This little fan is amazing! I was skeptical at first, but it's
+                  surprisingly powerful for its size. The battery life is
+                  excellent, and it's so convenient for travel. I've been using
+                  it during my commute in Mumbai's hot summer and it makes a
+                  huge difference. Highly recommended!
+                </div>
+              </div>
+
+              <!-- Review 2 -->
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="reviewer-name">Priya Patel</div>
+                  <div class="review-date">February 28, 2023</div>
+                </div>
+                <div class="review-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <div class="review-title">Great for office use</div>
+                <div class="review-content">
+                  I bought this fan to use at my desk in the office, and it's
+                  perfect. It's quiet enough that it doesn't disturb my
+                  colleagues, but powerful enough to keep me cool. The
+                  adjustable settings are really useful, and I love the sleek
+                  design. The only small issue is that I wish the battery lasted
+                  a bit longer at the highest setting.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Review Modal Overlay -->
+    <div id="review-modal" class="modal-overlay">
+      <div class="review-container">
+        <span class="close-modal" id="close-review-modal">&times;</span>
+        <h2>Write a Review</h2>
+        <form id="review-form">
+          <div class="review-form-group">
+            <label for="reviewer-name">Your Name</label>
+            <input
+              type="text"
+              id="reviewer-name"
+              name="reviewer_name"
+              required
+              class="review-form-input"
+            />
+          </div>
+
+          <div class="review-form-group">
+            <label for="reviewer-email">Your Email</label>
+            <input
+              type="email"
+              id="reviewer-email"
+              name="reviewer_email"
+              required
+              class="review-form-input"
+            />
+          </div>
+
+          <div class="review-form-group">
+            <label>Your Rating</label>
+            <div class="star-rating">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+              <input type="hidden" id="rating-value" name="rating" value="0" />
+            </div>
+          </div>
+
+          <div class="review-form-group">
+            <label for="review-title">Review Title</label>
+            <input
+              type="text"
+              id="review-title"
+              name="review_title"
+              required
+              class="review-form-input"
+            />
+          </div>
+
+          <div class="review-form-group">
+            <label for="review-content">Your Review</label>
+            <textarea
+              id="review-content"
+              name="review_content"
+              required
+              class="review-form-textarea"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn1 full-width-btn">
+            Submit Review
+          </button>
+          <div id="review-result" class="review-result"></div>
+        </form>
+      </div>
+    </div>
+
     <!-- Contact Section -->
     <section class="contact-section section-padding" id="contact">
       <div class="container">
@@ -789,3 +940,4 @@
     </script>
   </body>
 </html>
+```
